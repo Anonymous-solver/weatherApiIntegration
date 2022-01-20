@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<title>My App</title>
+	</head>
+
+	<body>
+		<div
+			style="
+				background-color: lightsalmon;
+				text-align: center;
+				border: 1px solid gray;
+				width: 50%;
+				padding: 10px;
+				margin-top: 10%;
+				margin-left: 25%;
+				box-shadow: 1px 1px 10px gray;
+				border-radius: 10px;
+			"
+		>
+			<h1 style="color: gray">Weather Checker</h1>
+			<h3>Select Your Country</h3>
+			<input
+				style="
+					border-radius: 10px;
+					padding: 5px;
+					border: 1px solid gray;
+					outline: none;
+				"
+				type="text"
+				name="country"
+				id="country"
+				placeholder="Enter country name..."
+			/>
+			<br />
+			<button
+				style="margin-top: 10px"
+				id="handleClick"
+				class="btn btn-success"
+			>
+				Submit
+			</button>
+			<h1 id="details"></h1>
+		</div>
+
+		<script>
+			let country = "";
+			const handleBtn = document.getElementById("handleClick");
+			handleBtn.addEventListener("click", function () {
+				country = document.getElementById("country").value;
+				fetch(
+					`http://api.weatherstack.com/current?access_key=179d28253e6951207c4816626bc26675&query=${country}`
+				)
+					.then((res) => res.json())
+					.then((data) => {
+						console.log(data);
+						document.getElementById("details").innerHTML = `<div>
+                            <img src=${data.current.weather_icons} alt='null'>
+                            <br/><br/>
+                            ${data.location.country} (${data.location.region})
+                            <br/><br/>Temparature:
+                            ${data.current.temperature}
+                            <br/><br/>Feels Like:
+                            ${data.current.feelslike}
+                            <br/><br/>Humidity:
+                            ${data.current.humidity}
+                        </div>`;
+						document.getElementById("country").value = "";
+					})
+					.catch((err) => {
+						console.error(err);
+					});
+			});
+		</script>
+	</body>
+</html>
